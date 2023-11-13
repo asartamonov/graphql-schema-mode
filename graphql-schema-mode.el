@@ -98,12 +98,12 @@ Default is nil, callers should consider root as dir containing opened file.
   '("&" "[" "]" "!"))
 
 (defvar-local gql--fontification
-  (let ((kword-regexp "\\(^\\|[[:blank:]]+\\)\\(%s\\)[[:blank:]]+[[:alpha:]]")
-        (constant-regexp "^[[:blank:]]*[[:upper:]_]\\{2,\\}[[:blank:]]*")
-        (type-regexp "[[:upper:]][[:alpha:]]+")
+  (let ((kword-regexp "\\b\\(%s\\)\\b")
+        (constant-regexp "\\b[[:upper:]]\\{2,\\}_?\\b")
+        (type-regexp "\\b[[:upper:]][[:alpha:]]+")
         (or-delimit-regexp "\\|"))
     (append
-     (mapcar (lambda (k) (cons k '(2 font-lock-keyword-face)))
+     (mapcar (lambda (k) (cons k '(1 font-lock-keyword-face)))
              (mapcar (lambda (s) (format kword-regexp s)) gql--keywords))
      (list
       (cons (mapconcat (lambda (s) (format "\\%s" s)) gql--special-signs or-delimit-regexp)
@@ -114,7 +114,7 @@ Default is nil, callers should consider root as dir containing opened file.
   "Fontification settings for graphql mode.")
 
 (define-derived-mode graphql-schema-mode prog-mode
-  "Graphql schema mode: syntax highlighting and tools for work with schemas files."
+  ".graphql schema mode"
   (setq font-lock-defaults '(gql--fontification))
   (setq-local comment-start "# ")
   (setq-local comment-skip-start "#+[ \t]*")
@@ -173,7 +173,6 @@ otherwise, return current user home dir."
                                                                           (if (not (s-starts-with? "*" ext))
                                                                               (concat "*" ext)))
                                                                         schema-file-extensions)))
-              ;(add-to-list 'semantic-symref-filepattern-alist  '(graphql-schema-mode "*.graphqls"))
               (if (not (file-exists-p (gql--tags-file-name)))
                   (gql--build-tags))
               (setq tags-revert-without-query 1
