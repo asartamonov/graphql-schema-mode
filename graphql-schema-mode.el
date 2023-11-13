@@ -7,8 +7,6 @@
 ;;;                imenu integration: entities
 ;;;                comments collapsing for better readability
 ;;;                xref integration (auto tagfile build, rebuild)
-;;;                templating: docstring, type, interface
-;;;                flycheck integration: type implements interface, naming conventions
 ;;;        
 
 ;;; Code:
@@ -57,9 +55,7 @@ Multiple keys corresponding to the same group name supported."
   "Tags file name, conventionally named as TAGS."
   :type 'string)
 
-(defcustom schema-locations '(
-                              ;;("~/Projects/graphq" . (list "~/Projects/emacs/graphql"))
-                              )
+(defcustom schema-locations '()
   "Schema files root locations.
 Useful when your schema files located in several locations.
 Set per project:
@@ -133,10 +129,7 @@ Default is nil, callers should consider root as dir containing opened file.
         (setq-local gql--disp-buff-alist display-buffer-alist)
         (add-to-list 'display-buffer-alist '("*Async Shell Command*" . (display-buffer-no-window . nil)) )
         (async-shell-command build-tags-cmd)
-        (setq display-buffer-alist gql--disp-buff-alist)
-        )))
-
-;(gql--build-tags)
+        (setq display-buffer-alist gql--disp-buff-alist))))
 
 (defun gql--curr-buffer-vc-root ()
   "Find vc root or nil if not tracked by vc."
@@ -156,7 +149,6 @@ otherwise, return current user home dir."
     (cond (custom-locations custom-locations)
           (vc-root (list vc-root))
           (curr-buf-dir (list curr-buf-dir)))))
-;(gql--schema-search-path)
 
 (add-hook 'graphql-schema-mode-hook
           (lambda ()
