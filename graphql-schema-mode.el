@@ -59,11 +59,9 @@ Multiple keys corresponding to the same group name supported."
   "Schema files root locations.
 Useful when your schema files located in several locations.
 Set per project:
-- key is project VC system root dir
+- key is project VC system root dir (must be unique across projects)
 - value is list of schema files root dirs
-Default is nil, callers should consider root as dir containing opened file.
-Зачем это нужно? Чтобы строить теги: при построении etags учитывает файлы
-схем из всех локаций."
+Default is nil, callers should consider root as dir containing opened file."
   :type '(alist
           :key-type (directory :tag "project-vc-root")
           :value-type (repeat (directory :tag "schema location dir"))))
